@@ -1,84 +1,281 @@
-cubical_upper_1d:
-KNeighbors
-grid search completed in 1023.2573642730713s, best parameter is 83 with score 0.8525
-------------------ProkhorovDistance(coefs=array([ 0, 83]), n_jobs=-1)------------------
-distance computation done in  26.324633359909058
-training accuracy:  0.8525
-test accuracy:  0.86
+cubical_lower_1d:
+KNeighbors:
+grid search completed in 1025.1177444458008s, best parameter is 92 with score 0.8625
+------------------ProkhorovDistance(coefs=array([ 0, 92]), n_jobs=-1)------------------
+distance computation done in  26.56729507446289
+training accuracy:  0.8625
+test accuracy:  0.825
 ------------------BottleneckDistance(n_jobs=-1)------------------
-distance computation done in  36.423521518707275
-training accuracy:  0.49749999999999994
-test accuracy:  0.5
+distance computation done in  36.684470653533936
+training accuracy:  0.5025000000000001
+test accuracy:  0.5375
 ------------------WassersteinDistance(internal_p=1, n_jobs=-1)------------------
-distance computation done in  44.652971267700195
-training accuracy:  0.5325
-test accuracy:  0.5325
+distance computation done in  44.432074546813965
+training accuracy:  0.5449999999999999
+test accuracy:  0.575
 ------------------WassersteinDistance(internal_p=2, n_jobs=-1, order=2)------------------
-distance computation done in  125.16995072364807
-training accuracy:  0.495
-test accuracy:  0.4675
+distance computation done in  125.9641842842102
+training accuracy:  0.48250000000000004
+test accuracy:  0.495
 
-KMedoids
-grid search completed in 4537.261185407639s, best parameter is 26 with score 0.6
-------------------ProkhorovDistance(coefs=array([ 0, 26]), n_jobs=-1)------------------
-distance computation done in  26.692811250686646
-training accuracy:  0.6
-test accuracy:  0.565
+KMedoids:
+grid search completed in 1098.8226943016052s, best parameter is 16 with score 0.6249999999999999
+------------------ProkhorovDistance(coefs=array([ 0, 16]), n_jobs=-1)------------------
+distance computation done in  77.0815839767456
+training accuracy:  0.62
+test accuracy:  0.5975
 ------------------BottleneckDistance(n_jobs=-1)------------------
-distance computation done in  41.968002796173096
-training accuracy:  0.47250000000000003
-test accuracy:  0.5
+distance computation done in  113.94491410255432
+training accuracy:  0.4925
+test accuracy:  0.5125
 ------------------WassersteinDistance(internal_p=1, n_jobs=-1)------------------
-distance computation done in  46.24284076690674
-training accuracy:  0.4575
-test accuracy:  0.485
+distance computation done in  132.64501762390137
+training accuracy:  0.49
+test accuracy:  0.4975
 ------------------WassersteinDistance(internal_p=2, n_jobs=-1, order=2)------------------
-distance computation done in  130.49452137947083
-training accuracy:  0.4725
-test accuracy:  0.505
-
-
-cubical_upper_0d:
-
-KNeighbors
-grid search completed in 1077.946482181549s, best parameter is 49 with score 0.8675
-------------------ProkhorovDistance(coefs=array([ 0, 49]), n_jobs=-1)------------------
-distance computation done in  27.44137477874756
-training accuracy:  0.8675
-test accuracy:  0.8225
-------------------BottleneckDistance(n_jobs=-1)------------------
-distance computation done in  39.16302013397217
-training accuracy:  0.6
-test accuracy:  0.52
-------------------WassersteinDistance(internal_p=1, n_jobs=-1)------------------
-distance computation done in  47.552390336990356
-training accuracy:  0.6375
-test accuracy:  0.565
-------------------WassersteinDistance(internal_p=2, n_jobs=-1, order=2)------------------
-distance computation done in  130.46910429000854
-training accuracy:  0.5650000000000001
+distance computation done in  401.9871201515198
+training accuracy:  0.485
 test accuracy:  0.515
 
-KMedoids
-grid search completed in 4707.309104681015s, best parameter is 14 with score 0.655
-------------------ProkhorovDistance(coefs=array([ 0, 26]), n_jobs=-1)------------------
-distance computation done in  28.46404004096985
-training accuracy:  0.5925
-test accuracy:  0.6
+cubical_lower_0d
+KNeighbors
+grid search completed in 1059.247181892395s, best parameter is 49 with score 0.8425
+------------------ProkhorovDistance(coefs=array([ 0, 49]), n_jobs=-1)------------------
+distance computation done in  26.688028573989868
+training accuracy:  0.8425
+test accuracy:  0.8575
 ------------------BottleneckDistance(n_jobs=-1)------------------
-distance computation done in  36.08703637123108
-training accuracy:  0.47250000000000003
+distance computation done in  36.61110782623291
+training accuracy:  0.515
 test accuracy:  0.485
 ------------------WassersteinDistance(internal_p=1, n_jobs=-1)------------------
-distance computation done in  44.6536705493927
-training accuracy:  0.475
-test accuracy:  0.4875
+distance computation done in  44.56486773490906
+training accuracy:  0.5800000000000001
+test accuracy:  0.535
 ------------------WassersteinDistance(internal_p=2, n_jobs=-1, order=2)------------------
-distance computation done in  137.9014265537262
-training accuracy:  0.46749999999999997
-test accuracy:  0.4775
+distance computation done in  125.1641321182251
+training accuracy:  0.5250000000000001
+test accuracy:  0.4925
+
+
+KMedoids
+grid search completed in 1082.3087856769562s, best parameter is 18 with score 0.5725
+------------------ProkhorovDistance(coefs=array([ 0, 18]), n_jobs=-1)------------------
+distance computation done in  70.14132475852966
+training accuracy:  0.5975
+test accuracy:  0.62
+------------------BottleneckDistance(n_jobs=-1)------------------
+distance computation done in  108.56972622871399
+training accuracy:  0.5325
+test accuracy:  0.51
+------------------WassersteinDistance(internal_p=1, n_jobs=-1)------------------
+distance computation done in  127.60169434547424
+training accuracy:  0.515
+test accuracy:  0.485
+------------------WassersteinDistance(internal_p=2, n_jobs=-1, order=2)------------------
+distance computation done in  379.4364745616913
+training accuracy:  0.51
+test accuracy:  0.5125
+
 
 
 
 PI_dim1_noise1
+KNeighbors
+grid search completed in 809.1156919002533s, best parameter is 61 with score 0.9333333333333333
+------------------ProkhorovDistance(coefs=array([ 0, 61]), n_jobs=-1)------------------
+distance computation done in  28.172240734100342
+training accuracy:  0.9333333333333333
+test accuracy:  0.9466666666666667
+------------------BottleneckDistance(n_jobs=-1)------------------
+distance computation done in  22.284404516220093
+training accuracy:  0.9200000000000002
+test accuracy:  0.9333333333333333
+------------------WassersteinDistance(internal_p=1, n_jobs=-1)------------------
+distance computation done in  26.985629081726074
+training accuracy:  0.9200000000000002
+test accuracy:  0.9866666666666667
+------------------WassersteinDistance(internal_p=2, n_jobs=-1, order=2)------------------
+distance computation done in  138.46844816207886
+training accuracy:  0.9333333333333333
+test accuracy:  0.9866666666666667
 
+KMedoids
+grid search completed in 832.2869536876678s, best parameter is 50 with score 0.8933333333333333
+------------------ProkhorovDistance(coefs=array([ 0, 50]), n_jobs=-1)------------------
+distance computation done in  88.91328191757202
+training accuracy:  0.88
+test accuracy:  0.8133333333333334
+------------------BottleneckDistance(n_jobs=-1)------------------
+distance computation done in  75.50383186340332
+training accuracy:  0.6933333333333334
+test accuracy:  0.7066666666666667
+------------------WassersteinDistance(internal_p=1, n_jobs=-1)------------------
+distance computation done in  80.01844692230225
+training accuracy:  0.8133333333333334
+test accuracy:  0.8533333333333334
+------------------WassersteinDistance(internal_p=2, n_jobs=-1, order=2)------------------
+distance computation done in  413.8486919403076
+training accuracy:  0.8133333333333334
+test accuracy:  0.8533333333333334
+
+PI_dim1_noise05
+KNeighbors
+grid search completed in 736.2033133506775s, best parameter is 51 with score 0.9733333333333334
+------------------ProkhorovDistance(coefs=array([ 0, 51]), n_jobs=-1)------------------
+distance computation done in  24.97810459136963
+training accuracy:  0.9733333333333334
+test accuracy:  0.96
+------------------BottleneckDistance(n_jobs=-1)------------------
+distance computation done in  22.821590900421143
+training accuracy:  0.9199999999999999
+test accuracy:  0.9333333333333333
+------------------WassersteinDistance(internal_p=1, n_jobs=-1)------------------
+distance computation done in  23.777799367904663
+training accuracy:  1.0
+test accuracy:  1.0
+------------------WassersteinDistance(internal_p=2, n_jobs=-1, order=2)------------------
+distance computation done in  118.58799934387207
+training accuracy:  1.0
+test accuracy:  1.0
+
+KMedoids
+grid search completed in 779.6638536453247s, best parameter is 98 with score 0.8266666666666665
+------------------ProkhorovDistance(coefs=array([ 0, 98]), n_jobs=-1)------------------
+distance computation done in  77.63306760787964
+training accuracy:  0.8
+test accuracy:  0.8666666666666667
+------------------BottleneckDistance(n_jobs=-1)------------------
+distance computation done in  76.08330845832825
+training accuracy:  0.7866666666666666
+test accuracy:  0.8266666666666667
+------------------WassersteinDistance(internal_p=1, n_jobs=-1)------------------
+distance computation done in  72.20467114448547
+training accuracy:  1.0
+test accuracy:  1.0
+------------------WassersteinDistance(internal_p=2, n_jobs=-1, order=2)------------------
+distance computation done in  366.663211107254
+training accuracy:  1.0
+test accuracy:  1.0
+
+
+
+PI_dim0_noise1
+KNeighbors
+grid search completed in 4267.572586774826s, best parameter is 87 with score 0.9733333333333334
+------------------ProkhorovDistance(coefs=array([ 0, 87]), n_jobs=-1)------------------
+distance computation done in  145.85832238197327
+training accuracy:  0.9733333333333334
+test accuracy:  1.0
+------------------BottleneckDistance(n_jobs=-1)------------------
+distance computation done in  44.22323536872864
+training accuracy:  0.7866666666666667
+test accuracy:  0.7466666666666667
+------------------WassersteinDistance(internal_p=1, n_jobs=-1)------------------
+distance computation done in  267.02371525764465
+training accuracy:  0.9866666666666667
+test accuracy:  1.0
+------------------WassersteinDistance(internal_p=2, n_jobs=-1, order=2)------------------
+distance computation done in  1081.5670087337494
+training accuracy:  0.9866666666666667
+test accuracy:  1.0
+
+KMedoids
+grid search completed in 4850.948441267014s, best parameter is 95 with score 0.8933333333333333
+------------------ProkhorovDistance(coefs=array([ 0, 95]), n_jobs=-1)------------------
+distance computation done in  456.6958134174347
+training accuracy:  0.8933333333333333
+test accuracy:  0.9733333333333334
+------------------BottleneckDistance(n_jobs=-1)------------------
+distance computation done in  161.04304265975952
+training accuracy:  0.6
+test accuracy:  0.56
+------------------WassersteinDistance(internal_p=1, n_jobs=-1)------------------
+distance computation done in  791.4443056583405
+training accuracy:  0.9866666666666667
+test accuracy:  0.96
+------------------WassersteinDistance(internal_p=2, n_jobs=-1, order=2)------------------
+distance computation done in  3195.7903060913086
+training accuracy:  0.96
+test accuracy:  0.9733333333333334
+
+
+
+PI_dim0_noise05
+KNeighbors
+grid search completed in 4218.3911991119385s, best parameter is 42 with score 0.9066666666666666
+------------------ProkhorovDistance(coefs=array([ 0, 42]), n_jobs=-1)------------------
+distance computation done in  144.24428057670593
+training accuracy:  0.9066666666666666
+test accuracy:  0.84
+------------------BottleneckDistance(n_jobs=-1)------------------
+distance computation done in  45.3953800201416
+training accuracy:  0.8133333333333335
+test accuracy:  0.7866666666666666
+------------------WassersteinDistance(internal_p=1, n_jobs=-1)------------------
+distance computation done in  252.81267285346985
+training accuracy:  1.0
+test accuracy:  0.96
+------------------WassersteinDistance(internal_p=2, n_jobs=-1, order=2)------------------
+distance computation done in  1063.37167429924
+training accuracy:  0.9866666666666667
+test accuracy:  0.9466666666666667
+
+KMedoids
+grid search completed in 4507.613620996475s, best parameter is 93 with score 0.8666666666666668
+------------------ProkhorovDistance(coefs=array([ 0, 93]), n_jobs=-1)------------------
+distance computation done in  465.34173583984375
+training accuracy:  0.8
+test accuracy:  0.9066666666666666
+------------------BottleneckDistance(n_jobs=-1)------------------
+distance computation done in  156.1280927658081
+training accuracy:  0.68
+test accuracy:  0.6
+------------------WassersteinDistance(internal_p=1, n_jobs=-1)------------------
+distance computation done in  801.3357646465302
+training accuracy:  0.9733333333333334
+test accuracy:  0.88
+------------------WassersteinDistance(internal_p=2, n_jobs=-1, order=2)------------------
+distance computation done in  3207.2188637256622
+training accuracy:  0.8933333333333333
+test accuracy:  0.8933333333333333
+
+
+3dSegmentation
+KNeighbors
+grid search completed in 40440.76908326149s, best parameter is 10 with score 0.9101754385964913
+------------------ProkhorovDistance(coefs=array([ 0, 10]), n_jobs=-1)------------------
+distance computation done in  795.2427561283112
+training accuracy:  0.9101754385964913
+test accuracy:  0.9270175438596491
+------------------BottleneckDistance(n_jobs=-1)------------------
+distance computation done in  1252.453706741333
+training accuracy:  0.9098245614035088
+test accuracy:  0.9245614035087719
+------------------WassersteinDistance(internal_p=1, n_jobs=-1)------------------
+distance computation done in  838.5659482479095
+training accuracy:  0.9042105263157895
+test accuracy:  0.9312280701754386
+------------------WassersteinDistance(internal_p=2, n_jobs=-1, order=2)------------------
+distance computation done in  1740.7613213062286
+training accuracy:  0.9059649122807019
+test accuracy:  0.9298245614035088
+
+KMedoids
+grid search completed in 41715.83107829094s, best parameter is 13 with score 0.46842105263157896
+------------------ProkhorovDistance(coefs=array([ 0, 13]), n_jobs=-1)------------------
+distance computation done in  1946.679748058319
+training accuracy:  0.4792982456140351
+test accuracy:  0.49859649122807015
+------------------BottleneckDistance(n_jobs=-1)------------------
+distance computation done in  3467.9827699661255
+training accuracy:  0.4905263157894737
+test accuracy:  0.48912280701754385
+------------------WassersteinDistance(internal_p=1, n_jobs=-1)------------------
+distance computation done in  2057.5558784008026
+training accuracy:  0.40210526315789474
+test accuracy:  0.4126315789473684
+------------------WassersteinDistance(internal_p=2, n_jobs=-1, order=2)------------------
+distance computation done in  5009.361773967743
+training accuracy:  0.4592982456140351
+test accuracy:  0.45649122807017545
