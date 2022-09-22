@@ -1,0 +1,814 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import numpy as np\n",
+    "%matplotlib widget\n",
+    "import gudhi as gd\n",
+    "from gudhi import hera\n",
+    "\n",
+    "from numpy.random import default_rng\n",
+    "import matplotlib.pyplot as plt\n",
+    "from matplotlib.widgets import Slider\n",
+    "import matplotlib.cm as cm\n",
+    "from matplotlib.colors import ListedColormap, LinearSegmentedColormap\n",
+    "import matplotlib.animation as animation\n",
+    "import persim\n",
+    "import math\n",
+    "from celluloid import Camera\n",
+    "from cycler import cycler"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "st1 = gd.SimplexTree()\n",
+    "with open(\"Complex1\") as f:\n",
+    "    content = f.readlines()    \n",
+    "for line in content:\n",
+    "    st1.insert(eval(line)[0], filtration = eval(line)[1])\n",
+    "\n",
+    "st2 = gd.SimplexTree()\n",
+    "with open(\"Complex2\") as f:\n",
+    "    content = f.readlines()    \n",
+    "for line in content:\n",
+    "    st2.insert(eval(line)[0], filtration = eval(line)[1])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "True"
+      ]
+     },
+     "execution_count": 3,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "st1 = gd.SimplexTree()\n",
+    "st2 = gd.SimplexTree()\n",
+    "\n",
+    "st1.insert([3],filtration=0)\n",
+    "st2.insert([3],filtration=0)\n",
+    "st1.insert([1],filtration=2/4)\n",
+    "st2.insert([1],filtration=2/4)\n",
+    "st1.insert([2],filtration=1/4)\n",
+    "st2.insert([2],filtration=1/4)\n",
+    "st1.insert([0],filtration=3/4)\n",
+    "st2.insert([0],filtration=3/4)\n",
+    "\n",
+    "\n",
+    "st1.insert([0,3], filtration = 1.2)\n",
+    "st1.insert([0,1], filtration = 1)\n",
+    "st1.insert([0,2], filtration = 1.4)\n",
+    "st1.insert([1,3], filtration = 1.6)\n",
+    "st1.insert([1,2], filtration = 1.8)\n",
+    "\n",
+    "\n",
+    "st2.insert([1,3], filtration = 1.6)\n",
+    "st2.insert([1,2], filtration = 1.8)\n",
+    "st2.insert([0,1], filtration=2)\n",
+    "st2.insert([0,3], filtration=6/5)\n",
+    "st2.insert([0,2], filtration=7/5)\n",
+    "    \n",
+    "st1.insert([0,1,2], filtration = 3)\n",
+    "st2.insert([0,1,2], filtration = 3)\n",
+    "st1.insert([0,1,3], filtration = 3.5)\n",
+    "st2.insert([0,1,3], filtration = 3.5)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "False"
+      ]
+     },
+     "execution_count": 4,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "rng = default_rng()\n",
+    "\n",
+    "st1 = gd.SimplexTree()\n",
+    "st2 = gd.SimplexTree()\n",
+    "\n",
+    "for i in range(0,4):\n",
+    "    st1.insert([i],filtration=rng.random()/2)\n",
+    "    st2.insert([i],filtration=(rng.random()/2)+0.5)\n",
+    "    for j in range(0,i):\n",
+    "        st1.insert([i,j],filtration=(rng.random()/2)+2)\n",
+    "        st2.insert([i,j],filtration=(rng.random()/2)+2.5)\n",
+    "        for k in range(0,j):\n",
+    "            st1.insert([i,j,0],filtration=(rng.random()/2)+4)\n",
+    "            st2.insert([i,j,0],filtration=(rng.random()/2)+4.5)\n",
+    "\n",
+    "st1.make_filtration_non_decreasing()\n",
+    "st2.make_filtration_non_decreasing()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "True"
+      ]
+     },
+     "execution_count": 5,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "st1 = gd.SimplexTree()\n",
+    "st2 = gd.SimplexTree()\n",
+    "\n",
+    "for i in range(0,4):\n",
+    "    st1.insert([i],filtration=rng.random()/2)\n",
+    "    st2.insert([i],filtration=(rng.random()/2)+0.5)\n",
+    "    for j in range(0,i):\n",
+    "        st1.insert([i,j],filtration=(rng.random()/2)+2)\n",
+    "        st2.insert([i,j],filtration=(rng.random()/2)+2.5)\n",
+    "\n",
+    "st1.insert([0,1,2],filtration=4.0)\n",
+    "st1.insert([0,1,3],filtration=4.1)\n",
+    "st1.insert([0,2,3],filtration=4.25)\n",
+    "st1.insert([1,2,3],filtration=4.4)\n",
+    "\n",
+    "st2.insert([0,1,2],filtration=4.9)\n",
+    "st2.insert([0,1,3],filtration=4.7)\n",
+    "st2.insert([0,2,3],filtration=4.55)\n",
+    "st2.insert([1,2,3],filtration=4.45)\n",
+    "\n",
+    "#st1.make_filtration_non_decreasing()\n",
+    "#st2.make_filtration_non_decreasing()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#extending the above example to n instead of 2\n",
+    "st1 = gd.SimplexTree()\n",
+    "st2 = gd.SimplexTree()\n",
+    "n = 4\n",
+    "\n",
+    "for i in range(0,n+2):\n",
+    "    st1.insert([i],filtration = ((n+1-i)%(n+2))/(n+2))\n",
+    "    st2.insert([i],filtration = ((n+1-i)%(n+2))/(n+2))\n",
+    "    \n",
+    "st1.insert([0,1],filtration = 1)\n",
+    "st2.insert([0,1],filtration = 2)\n",
+    "\n",
+    "for i in range(2,n+2):\n",
+    "    st1.insert([0,i],filtration = (4*n-2*i+4)/(2*n+1))\n",
+    "    st2.insert([0,i],filtration = (4*n-2*i+4)/(2*n+1))\n",
+    "    st1.insert([1,i],filtration = (4*n-2*i+5)/(2*n+1))\n",
+    "    st2.insert([1,i],filtration = (4*n-2*i+5)/(2*n+1))\n",
+    "    \n",
+    "for i in range(2,n+2):\n",
+    "    st1.insert([0,1,i],filtration = 3+(i-2)/n)\n",
+    "    st2.insert([0,1,i],filtration = 3+(i-2)/n)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "([5], 0.0)\n",
+      "([4], 0.16666666666666666)\n",
+      "([3], 0.3333333333333333)\n",
+      "([2], 0.5)\n",
+      "([1], 0.6666666666666666)\n",
+      "([0], 0.8333333333333334)\n",
+      "([0, 1], 1.0)\n",
+      "([0, 5], 1.1111111111111112)\n",
+      "([1, 5], 1.2222222222222223)\n",
+      "([0, 4], 1.3333333333333333)\n",
+      "([1, 4], 1.4444444444444444)\n",
+      "([0, 3], 1.5555555555555556)\n",
+      "([1, 3], 1.6666666666666667)\n",
+      "([0, 2], 1.7777777777777777)\n",
+      "([1, 2], 1.8888888888888888)\n",
+      "([0, 1, 2], 3.0)\n",
+      "([0, 1, 3], 3.25)\n",
+      "([0, 1, 4], 3.5)\n",
+      "([0, 1, 5], 3.75)\n"
+     ]
+    }
+   ],
+   "source": [
+    "st1_gen  = st1.get_filtration() \n",
+    "sc1_dict = {}\n",
+    "for splx in st1_gen :\n",
+    "    sc1_dict.update({str(splx[0]):splx[1]})\n",
+    "    print(splx)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "metadata": {
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "([5], 0.0)\n",
+      "([4], 0.16666666666666666)\n",
+      "([3], 0.3333333333333333)\n",
+      "([2], 0.5)\n",
+      "([1], 0.6666666666666666)\n",
+      "([0], 0.8333333333333334)\n",
+      "([0, 5], 1.1111111111111112)\n",
+      "([1, 5], 1.2222222222222223)\n",
+      "([0, 4], 1.3333333333333333)\n",
+      "([1, 4], 1.4444444444444444)\n",
+      "([0, 3], 1.5555555555555556)\n",
+      "([1, 3], 1.6666666666666667)\n",
+      "([0, 2], 1.7777777777777777)\n",
+      "([1, 2], 1.8888888888888888)\n",
+      "([0, 1], 2.0)\n",
+      "([0, 1, 2], 3.0)\n",
+      "([0, 1, 3], 3.25)\n",
+      "([0, 1, 4], 3.5)\n",
+      "([0, 1, 5], 3.75)\n"
+     ]
+    }
+   ],
+   "source": [
+    "st2_gen= st2.get_filtration() \n",
+    "sc2_dict = {}\n",
+    "for splx in st2_gen :\n",
+    "    sc2_dict.update({str(splx[0]):splx[1]})\n",
+    "    print(splx)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "{'[0, 1]': 1.0, '[0, 5]': 0.0, '[1, 5]': 0.0, '[0, 4]': 0.0, '[1, 4]': 0.0, '[0, 3]': 0.0, '[1, 3]': 0.0, '[0, 2]': 0.0, '[1, 2]': 0.0, '[0, 1, 2]': 0.0, '[0, 1, 3]': 0.0, '[0, 1, 4]': 0.0, '[0, 1, 5]': 0.0}\n"
+     ]
+    }
+   ],
+   "source": [
+    "dists_simplices = {k:np.abs(sc1_dict[k]- sc2_dict[k]) for k in sc1_dict.keys() if len(k)>3}\n",
+    "dists = np.unique(list(dists_simplices.values()))\n",
+    "dists = np.sort(dists)\n",
+    "\n",
+    "far_simplices = [(sum(x >= d for x in dists_simplices.values())) for d in dists]\n",
+    "print(dists_simplices)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "{'([0], [1, 0])': {'dim': 0, 'birth': 0.8333333333333334, 'death': 1.0}, '([1], [5, 0])': {'dim': 0, 'birth': 0.6666666666666666, 'death': 1.1111111111111112}, '([4], [4, 0])': {'dim': 0, 'birth': 0.16666666666666666, 'death': 1.3333333333333333}, '([3], [3, 0])': {'dim': 0, 'birth': 0.3333333333333333, 'death': 1.5555555555555556}, '([2], [2, 0])': {'dim': 0, 'birth': 0.5, 'death': 1.7777777777777777}, '([2, 1], [2, 1, 0])': {'dim': 1, 'birth': 1.8888888888888888, 'death': 3.0}, '([3, 1], [3, 1, 0])': {'dim': 1, 'birth': 1.6666666666666667, 'death': 3.25}, '([4, 1], [4, 1, 0])': {'dim': 1, 'birth': 1.4444444444444444, 'death': 3.5}, '([5, 1], [5, 1, 0])': {'dim': 1, 'birth': 1.2222222222222223, 'death': 3.75}, '([5], [])': {'dim': 0, 'birth': 0.0, 'death': inf}}\n",
+      "{'([0], [5, 0])': {'dim': 0, 'birth': 0.8333333333333334, 'death': 1.1111111111111112}, '([1], [5, 1])': {'dim': 0, 'birth': 0.6666666666666666, 'death': 1.2222222222222223}, '([4], [4, 0])': {'dim': 0, 'birth': 0.16666666666666666, 'death': 1.3333333333333333}, '([3], [3, 0])': {'dim': 0, 'birth': 0.3333333333333333, 'death': 1.5555555555555556}, '([2], [2, 0])': {'dim': 0, 'birth': 0.5, 'death': 1.7777777777777777}, '([1, 0], [2, 1, 0])': {'dim': 1, 'birth': 2.0, 'death': 3.0}, '([2, 1], [3, 1, 0])': {'dim': 1, 'birth': 1.8888888888888888, 'death': 3.25}, '([3, 1], [4, 1, 0])': {'dim': 1, 'birth': 1.6666666666666667, 'death': 3.5}, '([4, 1], [5, 1, 0])': {'dim': 1, 'birth': 1.4444444444444444, 'death': 3.75}, '([5], [])': {'dim': 0, 'birth': 0.0, 'death': inf}}\n"
+     ]
+    }
+   ],
+   "source": [
+    "st1.compute_persistence()\n",
+    "st2.compute_persistence()\n",
+    "\n",
+    "st1P0 = st1.persistence_intervals_in_dimension(0)\n",
+    "st2P0 = st2.persistence_intervals_in_dimension(0)\n",
+    "\n",
+    "st1P1 = st1.persistence_intervals_in_dimension(1)\n",
+    "st2P1 = st2.persistence_intervals_in_dimension(1)\n",
+    "\n",
+    "PP1= {}\n",
+    "for p in st1.persistence_pairs():\n",
+    "    PP1.update({str(p):{\"dim\":len(p[0])-1, \"birth\":st1.filtration(p[0]),\"death\":st1.filtration(p[1])}})\n",
+    "\n",
+    "PP2= {}\n",
+    "for p in st2.persistence_pairs():\n",
+    "    PP2.update({str(p):{\"dim\":len(p[0])-1, \"birth\":st2.filtration(p[0]),\"death\":st2.filtration(p[1])}})\n",
+    "    \n",
+    "print(PP1)\n",
+    "print(PP2)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "application/vnd.jupyter.widget-view+json": {
+       "model_id": "1ca91900e8fd420ca647131b53dcd8b4",
+       "version_major": 2,
+       "version_minor": 0
+      },
+      "text/plain": [
+       "Canvas(toolbar=Toolbar(toolitems=[('Home', 'Reset original view', 'home', 'home'), ('Back', 'Back to previous …"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[0.11111111111111116, 0.11111111111111116, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]\n",
+      "[0.22222222222222232, 0.2222222222222221, 0.2222222222222221, 0.11111111111111116, 0.0, 0.0, 0.0, 0.0, 0.0]\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/tmp/ipykernel_6299/2874090443.py:40: RuntimeWarning: divide by zero encountered in true_divide\n",
+      "  ax.plot(rs,np.floor(gd.hera.wasserstein_distance(X, Y, order=p, internal_p=np.inf)/(rs**p)), label = \"$W_1(X,Y)/\\varepsilon$\")\n",
+      "/tmp/ipykernel_6299/2874090443.py:40: RuntimeWarning: divide by zero encountered in true_divide\n",
+      "  ax.plot(rs,np.floor(gd.hera.wasserstein_distance(X, Y, order=p, internal_p=np.inf)/(rs**p)), label = \"$W_1(X,Y)/\\varepsilon$\")\n",
+      "/tmp/ipykernel_6299/2874090443.py:40: RuntimeWarning: divide by zero encountered in true_divide\n",
+      "  ax.plot(rs,np.floor(gd.hera.wasserstein_distance(X, Y, order=p, internal_p=np.inf)/(rs**p)), label = \"$W_1(X,Y)/\\varepsilon$\")\n",
+      "/tmp/ipykernel_6299/2874090443.py:40: RuntimeWarning: divide by zero encountered in true_divide\n",
+      "  ax.plot(rs,np.floor(gd.hera.wasserstein_distance(X, Y, order=p, internal_p=np.inf)/(rs**p)), label = \"$W_1(X,Y)/\\varepsilon$\")\n",
+      "/tmp/ipykernel_6299/2874090443.py:40: RuntimeWarning: divide by zero encountered in true_divide\n",
+      "  ax.plot(rs,np.floor(gd.hera.wasserstein_distance(X, Y, order=p, internal_p=np.inf)/(rs**p)), label = \"$W_1(X,Y)/\\varepsilon$\")\n"
+     ]
+    }
+   ],
+   "source": [
+    "n_points0 = len(st1P0)+len(st2P0)\n",
+    "d_vals0 = np.linspace(0,n_points0,n_points0+1)\n",
+    "r_vals0 = [gd.prokhorov_distance(st1P0, st2P0, np.array([r])) for r in d_vals0]\n",
+    "n_points1 = len(st1P1)+len(st2P1)\n",
+    "d_vals1 = np.linspace(0,n_points1,n_points1+1)\n",
+    "r_vals1 = [gd.prokhorov_distance(st1P1, st2P1, np.array([r])) for r in d_vals1]\n",
+    "n_points=n_points0+n_points1\n",
+    "r_vals=np.sort(np.append(r_vals0,r_vals1))[::-1]\n",
+    "\n",
+    "f,(ax,ax2) = plt.subplots(1,2)\n",
+    "\n",
+    "ax.plot((0,dists[0]),(far_simplices[0],far_simplices[0]), c='r')\n",
+    "for i in range(0,len(dists)-1):\n",
+    "    ax.plot((dists[i],dists[i+1]),(far_simplices[i+1],far_simplices[i+1]), c='r')\n",
+    "    \n",
+    "for i in range(1,n_points1+1):\n",
+    "    ax.plot((r_vals1[i],r_vals1[i-1]),(i, i), c='c', label='$D_{X,Y}$', ls=\"--\")\n",
+    "ax.plot((r_vals1[-1],0),(n_points1, n_points1), c='c', label='$D_{X,Y}$', ls=\"--\")\n",
+    "for i in range(1,n_points0+1):\n",
+    "    ax.plot((r_vals0[i],r_vals0[i-1]),(i, i), c='b', label='$D_{X,Y}$', ls=\"--\")\n",
+    "ax.plot((r_vals0[-1],0),(n_points0, n_points0), c='b', label='$D_{X,Y}$', ls=\"--\")\n",
+    "for i in range(1,n_points+1):\n",
+    "    ax.plot((r_vals[i],r_vals[i-1]),(i, i), color='tab:blue', label='$D_{X,Y}$', ls=\"--\")\n",
+    "ax.plot((r_vals[-1],0),(n_points, n_points), color='tab:blue', label='$D_{X,Y}$', ls=\"--\")\n",
+    "\n",
+    "#bp = np.array([gd.bottleneck_profile(st1P0, st2P0,r0) for r0 in np.sort(r_vals0)])\n",
+    "#ax.plot(np.sort(r_vals0),bp)\n",
+    "\n",
+    "\n",
+    "#diag_dists=np.sort(np.append((st1P[:,1]-st1P[:,0])/2,(st2P[:,1]-st2P[:,0])/2))\n",
+    "#for i in range(1,len(diag_dists)):\n",
+    "#    ax.plot((diag_dists[i-1],diag_dists[i]),(len(diag_dists)-i, len(diag_dists)-i), color='tab:orange', label='$D_{X,Y}$', ls=\"--\")\n",
+    "#ax.plot((0,diag_dists[0]),(len(diag_dists), len(diag_dists)), color='tab:orange', label='$D_{X,Y}$', ls=\"--\")    \n",
+    "X = np.concatenate((st1P0,st1P1), axis=0)\n",
+    "Y = np.concatenate((st2P0,st2P1), axis=0)\n",
+    "\n",
+    "rs=np.linspace(0,1,1001)\n",
+    "#Bottleneck_counts=[gd.bottleneck_profile(st1P1,st2P1,r)+gd.bottleneck_profile(st1P0,st2P0,r) for r in rs]\n",
+    "for p in range(1,6):\n",
+    "    ax.plot(rs,np.floor(gd.hera.wasserstein_distance(X, Y, order=p, internal_p=np.inf)/(rs**p)), label = \"$W_1(X,Y)/\\varepsilon$\")\n",
+    "#for r in rs:\n",
+    "    #ax.scatter(r,gd.bottleneck_profile(st1P,st2P,r))\n",
+    "ax.set_ylim((-0.2,n_points))\n",
+    "plt.show()\n",
+    "print(r_vals0)\n",
+    "print(r_vals1)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "1.0\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "0.22222222222222232"
+      ]
+     },
+     "execution_count": 12,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "print(dists[-1])\n",
+    "r_vals[0]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "application/vnd.jupyter.widget-view+json": {
+       "model_id": "469d8b346b6e4cc4ad9982ac374432d7",
+       "version_major": 2,
+       "version_minor": 0
+      },
+      "text/plain": [
+       "Canvas(toolbar=Toolbar(toolitems=[('Home', 'Reset original view', 'home', 'home'), ('Back', 'Back to previous …"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "f,(ax, ax2) = plt.subplots(1,2,figsize=(12,6))\n",
+    "plt.subplots_adjust(left=0.25, bottom=0.25)\n",
+    "axeps = plt.axes([0.25, 0.1, 0.65, 0.03])\n",
+    "seps2 = Slider(axeps, 't', 0.0, 1, valinit=0, valstep=0.01)\n",
+    "\n",
+    "def update(val):\n",
+    "    ax.clear()\n",
+    "    ax2.clear()\n",
+    "    ax2.set_prop_cycle(cycler('color', plt.cm.jet(np.linspace(0, 1, n+2+2*n+1+n))))\n",
+    "    st1_gen  = st1.get_filtration() \n",
+    "    stt = gd.SimplexTree()\n",
+    "    for splx in st1_gen :\n",
+    "        stt.insert(splx[0],filtration = val*st2.filtration(splx[0])+(1-val)*splx[1])\n",
+    "        ax2.plot((0,1),(splx[1],st2.filtration(splx[0])), label = splx[0])\n",
+    "    stt.compute_persistence()\n",
+    "    PPt= {}\n",
+    "    for p in stt.persistence_pairs():\n",
+    "        PPt.update({str(p):{\"dim\":len(p[0])-1, \"birth\":stt.filtration(p[0]),\"death\":stt.filtration(p[1])}})\n",
+    "    \n",
+    "    sttP0 = stt.persistence_intervals_in_dimension(0)\n",
+    "    sttP1 = stt.persistence_intervals_in_dimension(1)\n",
+    "    ax.scatter(st1P0[:,0],st1P0[:,1],label='$Dgm(f_0)$',color=\"tab:blue\")\n",
+    "    ax.scatter(st2P0[:,0],st2P0[:,1],label='$Dgm(f_1)$',color=\"tab:orange\")\n",
+    "    ax.scatter(sttP0[:,0],sttP0[:,1],label='$Dgm(f_t)$',color=\"tab:green\")\n",
+    "    ax.scatter(st1P1[:,0],st1P1[:,1],label='$Dgm(f_0)$',color=\"tab:blue\", marker=\"^\")\n",
+    "    ax.scatter(st2P1[:,0],st2P1[:,1],label='$Dgm(f_1)$',color=\"tab:orange\", marker=\"^\")\n",
+    "    ax.scatter(sttP1[:,0],sttP1[:,1],label='$Dgm(f_t)$',color=\"tab:green\", marker=\"^\")\n",
+    "    ax.axline((0,0), slope=1,ls=\"--\",color=\"black\")\n",
+    "    (bottom,top) = ax.get_ylim()\n",
+    "    PPdicts=[PP1,PPt,PP2]\n",
+    "    \n",
+    "    for PP in PPdicts:\n",
+    "        for (k,v) in PP.items():\n",
+    "            if(not math.isinf(v[\"death\"])):\n",
+    "                ax.annotate(k, (v[\"birth\"],v[\"death\"]),fontsize=5)\n",
+    "            else:\n",
+    "                ax.annotate(k, (v[\"birth\"],0.95*top),fontsize=5)\n",
+    "\n",
+    "    ax2.vlines(val, 0,4,ls=\"--\", color=\"black\")\n",
+    "    \n",
+    "    handles, labels = ax.get_legend_handles_labels()\n",
+    "    by_label = dict(zip(labels, handles))\n",
+    "    ax.legend(by_label.values(), by_label.keys(), loc=\"lower right\")\n",
+    "    ax2.legend(bbox_to_anchor=(1,1), loc=\"upper left\")    \n",
+    "    f.canvas.draw_idle()\n",
+    "    \n",
+    "seps2.on_changed(update)\n",
+    "\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "{'([2, 3], [1, 2])': 0.1538391281655032, '([0, 1], [1, 3])': 0.31346429918417684, '([2], [0])': 0.4718649175064616, '([2, 3], [0, 3])': 0.5250961700399711, '([2], [1])': 0.9247929058147163, '([2, 3], [1, 3])': 0.939592502029053}\n"
+     ]
+    }
+   ],
+   "source": [
+    "st1_gen  = st1.get_filtration() \n",
+    "st2_gen  = st2.get_filtration() \n",
+    "Intersection_times = {}\n",
+    "for sigma in st1_gen :\n",
+    "    st2_gen  = st2.get_filtration() \n",
+    "    for tau in st2_gen :\n",
+    "        if(st2.filtration(sigma[0])-st1.filtration(sigma[0])-st2.filtration(tau[0])+st1.filtration(tau[0])!=0):\n",
+    "            time = (st1.filtration(tau[0])-st1.filtration(sigma[0]))/(st2.filtration(sigma[0])-st1.filtration(sigma[0])-st2.filtration(tau[0])+st1.filtration(tau[0]))\n",
+    "            #print((sigma[0],tau[0]),time)\n",
+    "            if(len(sigma[0])==len(tau[0])) and time>0 and time<1 and sigma[0]!=tau[0] and str((tau[0],sigma[0])) not in Intersection_times.keys():\n",
+    "                Intersection_times.update({str((sigma[0],tau[0])): time})\n",
+    "\n",
+    "Intersection_times = dict(sorted(Intersection_times.items(), key=lambda item: item[1]))\n",
+    "                \n",
+    "print(Intersection_times)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "application/vnd.jupyter.widget-view+json": {
+       "model_id": "c9b161c005574af58455acbad746a195",
+       "version_major": 2,
+       "version_minor": 0
+      },
+      "text/plain": [
+       "Canvas(toolbar=Toolbar(toolitems=[('Home', 'Reset original view', 'home', 'home'), ('Back', 'Back to previous …"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "f,(ax, ax2) = plt.subplots(2,1,figsize=(14,28))\n",
+    "ax2.set_ylim((-0.5,5.5))\n",
+    "\n",
+    "viridis = cm.get_cmap('hsv')#, len(Intersection_times)+1)\n",
+    "colormap = plt.cm.gist_ncar\n",
+    "ax2.set_prop_cycle(cycler('color', plt.cm.jet(np.linspace(0, 1, 13))))\n",
+    "\n",
+    "\n",
+    "eps=0.0001\n",
+    "\n",
+    "ax.scatter(st1P0[:,0],st1P0[:,1],label='$Dgm(f_0)$',color=\"tab:blue\")\n",
+    "ax.scatter(st2P0[:,0],st2P0[:,1],label='$Dgm(f_1)$',color=\"tab:orange\")\n",
+    "#ax.scatter(sttP0[:,0],sttP0[:,1],label='$Dgm(f_t)$',color=\"tab:green\")\n",
+    "ax.scatter(st1P1[:,0],st1P1[:,1],label='$Dgm(f_0)$',color=\"tab:blue\", marker=\"^\")\n",
+    "ax.scatter(st2P1[:,0],st2P1[:,1],label='$Dgm(f_1)$',color=\"tab:orange\", marker=\"^\")\n",
+    "#ax.scatter(sttP1[:,0],sttP1[:,1],label='$Dgm(f_t)$',color=\"tab:green\", marker=\"^\")\n",
+    "ax.axline((0,0), slope=1,ls=\"--\",color=\"black\")\n",
+    "    \n",
+    "    \n",
+    "(bottom,top) = ax.get_ylim()\n",
+    "PPdicts=[PP1,PP2]\n",
+    "    \n",
+    "#annotate points in PDs with persistence pairs\n",
+    "for PP in PPdicts:\n",
+    "    for (k,v) in PP.items():\n",
+    "        if(not math.isinf(v[\"death\"])):\n",
+    "            ax.annotate(k, (v[\"birth\"],v[\"death\"]),fontsize=5)\n",
+    "        else:\n",
+    "            ax.annotate(k, (v[\"birth\"],0.95*top),fontsize=5)\n",
+    "\n",
+    "st1_gen  = st1.get_filtration() \n",
+    "for splx in st1_gen :\n",
+    "    ax2.plot((0,1),(splx[1],st2.filtration(splx[0])), label = splx[0])\n",
+    "            \n",
+    "oldPP = PP1\n",
+    "for (key,val) in Intersection_times.items():\n",
+    "    #ax.clear()\n",
+    "    #ax2.clear()\n",
+    "\n",
+    "    stt = gd.SimplexTree()\n",
+    "    st1_gen  = st1.get_filtration() \n",
+    "    for splx in st1_gen :\n",
+    "        stt.insert(splx[0],filtration = (val-eps)*st2.filtration(splx[0])+(1-(val-eps))*splx[1])\n",
+    "    stt.compute_persistence()\n",
+    "    PPt= {}\n",
+    "    for p in stt.persistence_pairs():\n",
+    "        PPt.update({str(p):{\"dim\":len(p[0])-1, \"birth\":stt.filtration(p[0]),\"death\":stt.filtration(p[1])}})\n",
+    "    sttP0 = stt.persistence_intervals_in_dimension(0)\n",
+    "    sttP1 = stt.persistence_intervals_in_dimension(1)\n",
+    "    \n",
+    "    for (k,v) in oldPP.items():\n",
+    "        ax.plot((v[\"birth\"],PPt[k][\"birth\"]),(v[\"death\"],PPt[k][\"death\"]), color=\"gray\")\n",
+    "    \n",
+    "    \n",
+    "    stt = gd.SimplexTree()\n",
+    "    st1_gen  = st1.get_filtration() \n",
+    "    for splx in st1_gen :\n",
+    "        stt.insert(splx[0],filtration = (val+eps)*st2.filtration(splx[0])+(1-(val+eps))*splx[1])\n",
+    "    stt.compute_persistence()\n",
+    "    PPt= {}\n",
+    "    for p in stt.persistence_pairs():\n",
+    "        PPt.update({str(p):{\"dim\":len(p[0])-1, \"birth\":stt.filtration(p[0]),\"death\":stt.filtration(p[1])}})\n",
+    "    sttP0 = stt.persistence_intervals_in_dimension(0)\n",
+    "    sttP1 = stt.persistence_intervals_in_dimension(1)\n",
+    "    \n",
+    "    for (k,v) in PPt.items():\n",
+    "        #if eval(key)[0] in eval(k) or eval(key)[1] in eval(k):\n",
+    "        col = viridis(val)\n",
+    "        ax.scatter(v[\"birth\"],v[\"death\"],label='$Dgm(f_t)$', color=col, cmap= \"viridis\")\n",
+    "        ax.annotate(k, (v[\"birth\"],v[\"death\"]), fontsize=5)\n",
+    "\n",
+    "    \n",
+    "    oldPP = PPt\n",
+    "    #Vlines at intersections\n",
+    "    ax2.vlines(val, 0,5,ls=\"--\", color=\"black\")\n",
+    "    ax2.annotate(key, (val,-0.5),fontsize=10, rotation=\"90\")\n",
+    "    ax2.annotate(key, (val,5),fontsize=10, rotation=\"90\")\n",
+    "    \n",
+    "    #legends\n",
+    "    handles, labels = ax.get_legend_handles_labels()\n",
+    "    by_label = dict(zip(labels, handles))\n",
+    "    ax.legend(by_label.values(), by_label.keys(), loc=\"lower right\")\n",
+    "    handles, labels = ax2.get_legend_handles_labels()\n",
+    "    by_label = dict(zip(labels, handles))\n",
+    "    ax2.legend(by_label.values(), by_label.keys(),bbox_to_anchor=(1,1), loc=\"upper left\")    \n",
+    "    #plt.pause(0.1)\n",
+    "    #camera.snap()\n",
+    "\n",
+    "for (k,v) in oldPP.items():\n",
+    "    ax.plot((v[\"birth\"],PP2[k][\"birth\"]),(v[\"death\"],PP2[k][\"death\"]), color=\"gray\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "application/vnd.jupyter.widget-view+json": {
+       "model_id": "66f6abe6c7874527b8d7377c86269d2c",
+       "version_major": 2,
+       "version_minor": 0
+      },
+      "text/plain": [
+       "Canvas(toolbar=Toolbar(toolitems=[('Home', 'Reset original view', 'home', 'home'), ('Back', 'Back to previous …"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "ts=np.linspace(0,1,51)\n",
+    "\n",
+    "f,(ax, ax2) = plt.subplots(1,2,figsize=(12,6))\n",
+    "camera = Camera(f)\n",
+    "colormap = plt.cm.gist_ncar\n",
+    "\n",
+    "\n",
+    "for val in ts:\n",
+    "    #ax.clear()\n",
+    "    #ax2.clear()\n",
+    "    ax2.set_prop_cycle(cycler('color', plt.cm.jet(np.linspace(0, 1, 13))))\n",
+    "    stt = gd.SimplexTree()\n",
+    "    st1_gen  = st1.get_filtration() \n",
+    "    for splx in st1_gen :\n",
+    "        stt.insert(splx[0],filtration = val*st2.filtration(splx[0])+(1-val)*splx[1])\n",
+    "        ax2.plot((0,1),(splx[1],st2.filtration(splx[0])), label = splx[0])\n",
+    "    stt.compute_persistence()\n",
+    "    PPt= {}\n",
+    "    for p in stt.persistence_pairs():\n",
+    "        PPt.update({str(p):{\"dim\":len(p[0])-1, \"birth\":stt.filtration(p[0]),\"death\":stt.filtration(p[1])}})\n",
+    "    \n",
+    "    sttP0 = stt.persistence_intervals_in_dimension(0)\n",
+    "    sttP1 = stt.persistence_intervals_in_dimension(1)\n",
+    "    ax.scatter(st1P0[:,0],st1P0[:,1],label='$Dgm(f_0)$',color=\"tab:blue\")\n",
+    "    ax.scatter(st2P0[:,0],st2P0[:,1],label='$Dgm(f_1)$',color=\"tab:orange\")\n",
+    "    ax.scatter(sttP0[:,0],sttP0[:,1],label='$Dgm(f_t)$',color=\"tab:green\")\n",
+    "    ax.scatter(st1P1[:,0],st1P1[:,1],label='$Dgm(f_0)$',color=\"tab:blue\", marker=\"^\")\n",
+    "    ax.scatter(st2P1[:,0],st2P1[:,1],label='$Dgm(f_1)$',color=\"tab:orange\", marker=\"^\")\n",
+    "    ax.scatter(sttP1[:,0],sttP1[:,1],label='$Dgm(f_t)$',color=\"tab:green\", marker=\"^\")\n",
+    "    ax.axline((0,0), slope=1,ls=\"--\",color=\"black\")\n",
+    "    \n",
+    "    \n",
+    "    (bottom,top) = ax.get_ylim()\n",
+    "    PPdicts=[PP1,PPt,PP2]\n",
+    "    \n",
+    "    for PP in PPdicts:\n",
+    "        for (k,v) in PP.items():\n",
+    "            if(not math.isinf(v[\"death\"])):\n",
+    "                ax.annotate(k, (v[\"birth\"],v[\"death\"]),fontsize=5)\n",
+    "            else:\n",
+    "                ax.annotate(k, (v[\"birth\"],0.95*top),fontsize=5)\n",
+    "\n",
+    "    ax2.vlines(val, 0,3,ls=\"--\", color=\"black\")\n",
+    "    \n",
+    "    #legends\n",
+    "    handles, labels = ax.get_legend_handles_labels()\n",
+    "    by_label = dict(zip(labels, handles))\n",
+    "    ax.legend(by_label.values(), by_label.keys(), loc=\"lower right\")\n",
+    "    handles, labels = ax2.get_legend_handles_labels()\n",
+    "    by_label = dict(zip(labels, handles))\n",
+    "    ax2.legend(by_label.values(), by_label.keys(),bbox_to_anchor=(1,1), loc=\"upper left\")    \n",
+    "    plt.pause(0.1)\n",
+    "    camera.snap()\n",
+    "    #f.canvas.draw_idle()\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 21,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "animation = camera.animate()\n",
+    "animation.save('animation.mp4', fps=10)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 66,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "application/vnd.jupyter.widget-view+json": {
+       "model_id": "edefa370e709445881ff89f74a6c87d5",
+       "version_major": 2,
+       "version_minor": 0
+      },
+      "text/plain": [
+       "Canvas(toolbar=Toolbar(toolitems=[('Home', 'Reset original view', 'home', 'home'), ('Back', 'Back to previous …"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "f,ax = plt.subplots()\n",
+    "persim.plot_diagrams([st1.persistence_intervals_in_dimension(0),st1.persistence_intervals_in_dimension(1),st2.persistence_intervals_in_dimension(0),st2.persistence_intervals_in_dimension(1)], ax=ax)\n",
+    "plt.show()"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.9.7"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}
